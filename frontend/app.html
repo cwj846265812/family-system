@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家庭管理系统</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --primary: #D4A0B5;
+      --primary-dark: #B07A92;
+      --primary-light: #F5E6ED;
+      --accent: #8E6B7E;
+      --bg: #FAF7F9;
+      --bg-card: #FFFFFF;
+      --text: #3C2A34;
+      --text-secondary: #7A6A74;
+      --text-light: #B5A5AE;
+      --border: #E8D8E0;
+      --border-light: #F2EBF0;
+      --shadow: 0 2px 8px rgba(140, 107, 126, 0.08);
+      --shadow-hover: 0 4px 16px rgba(140, 107, 126, 0.15);
+      --radius: 10px;
+      --radius-lg: 14px;
+      --sidebar-w: 220px;
+      --z-sidebar: 100;
+      --z-overlay: 90;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ===== 侧边栏 ===== */
+    .sidebar {
+      width: var(--sidebar-w);
+      min-width: var(--sidebar-w);
+      height: 100vh;
+      background: linear-gradient(180deg, #F5E6ED 0%, #FAF4F7 50%, #FFFFFF 100%);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      z-index: var(--z-sidebar);
+      transition: transform 0.3s ease;
+      overflow-y: auto;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 16px;
+      border-bottom: 1px solid var(--border-light);
+    }
+
+    .sidebar-logo h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.5px;
+    }
+
+    .sidebar-logo .member-name {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      padding: 12px 0;
+      overflow-y: auto;
+    }
+
+    .sidebar-nav .nav-section {
+      padding: 8px 20px 4px;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      font-weight: 600;
+    }
+
+    .sidebar-nav a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 20px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      border-left: 3px solid transparent;
+      transition: all 0.15s ease;
+      position: relative;
+    }
+
+    .sidebar-nav a:hover {
+      background: var(--primary-light);
+      color: var(--accent);
+    }
+
+    .sidebar-nav a.active {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      border-left-color: var(--primary-dark);
+      font-weight: 600;
+    }
+
+    .sidebar-nav a .nav-icon {
+      font-size: 18px;
+      width: 24px;
+      text-align: center;
+      flex-shrink: 0;
+    }
+
+    .sidebar-footer {
+      padding: 14px 20px;
+      border-top: 1px solid var(--border-light);
+    }
+
+    .sidebar-footer .member-select {
+      width: 100%;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 13px;
+      font-family: inherit;
+      cursor: pointer;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .sidebar-footer .member-select:focus {
+      border-color: var(--primary);
+    }
+
+    /* ===== 内容区 ===== */
+    .content {
+      flex: 1;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .content iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* ===== 移动端汉堡按钮 ===== */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 12px;
+      left: 12px;
+      z-index: calc(var(--z-sidebar) + 10);
+      width: 42px;
+      height: 42px;
+      border: none;
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      font-size: 22px;
+      color: var(--accent);
+    }
+
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(60, 42, 52, 0.3);
+      z-index: var(--z-overlay);
+    }
+
+    /* ===== 响应式 ===== */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+        box-shadow: 4px 0 20px rgba(60, 42, 52, 0.15);
+      }
+      .sidebar.open {
+        transform: translateX(0);
+      }
+      .mobile-toggle {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .overlay.show {
+        display: block;
+      }
+      .sidebar-nav a {
+        padding: 14px 20px;
+        font-size: 15px;
+      }
+      .sidebar-footer .member-select {
+        min-height: 44px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<button class="mobile-toggle" id="mobileToggle" onclick="toggleSidebar()">&#9776;</button>
+<div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <h1>家庭管理系统</h1>
+    <div class="member-name" id="sidebarMemberName">加载中...</div>
+  </div>
+
+  <nav class="sidebar-nav">
+    <div class="nav-section">核心功能</div>
+    <a href="#" data-page="dashboard" class="active" onclick="switchPage('dashboard')">
+      <span class="nav-icon">&#9680;</span>仪表板
+    </a>
+    <a href="#" data-page="health" onclick="switchPage('health')">
+      <span class="nav-icon">&#9829;</span>健康管理
+    </a>
+    <a href="#" data-page="pregnancy" onclick="switchPage('pregnancy')">
+      <span class="nav-icon">&#9733;</span>孕产育
+    </a>
+    <a href="#" data-page="items" onclick="switchPage('items')">
+      <span class="nav-icon">&#9741;</span>物品管理
+    </a>
+    <a href="#" data-page="finance" onclick="switchPage('finance')">
+      <span class="nav-icon">&#9734;</span>财务管理
+    </a>
+    <a href="#" data-page="documents" onclick="switchPage('documents')">
+      <span class="nav-icon">&#128196;</span>文档中心
+    </a>
+    <div class="nav-section">女性健康</div>
+    <a href="#" data-page="period" onclick="switchPage('period')">
+      <span class="nav-icon">&#127773;</span>经期管理
+    </a>
+  </nav>
+
+  <div class="sidebar-footer">
+    <select class="member-select" id="memberSelect" onchange="onMemberChange()">
+      <option value="">加载中...</option>
+    </select>
+  </div>
+</aside>
+
+<div class="content">
+  <iframe id="appFrame" src="" title="内容区域"></iframe>
+</div>
+
+<script>
+  const API_BASE = 'http://localhost:5000';
+  let currentMemberId = null;
+  let allMembers = [];
+  let currentPage = 'dashboard';
+  let authToken = '';
+
+  (function () {
+    authToken = localStorage.getItem('family_token') || '';
+    currentMemberId = localStorage.getItem('family_member_id') || '';
+    if (!authToken) {
+      window.location.href = '/index.html';
+      return;
+    }
+    initApp();
+  })();
+
+  async function initApp() {
+    try {
+      const data = await apiFetch('/api/members');
+      allMembers = data.members || [];
+      renderMemberSelect();
+      if (currentMemberId) {
+        updateMemberDisplay(currentMemberId);
+      } else if (allMembers.length > 0) {
+        currentMemberId = allMembers[0].id;
+        localStorage.setItem('family_member_id', currentMemberId);
+        updateMemberDisplay(currentMemberId);
+      }
+      navigateTo(currentPage);
+    } catch (e) {
+      document.getElementById('sidebarMemberName').textContent = '连接失败';
+    }
+  }
+
+  async function apiFetch(endpoint, options = {}) {
+    const url = `${API_BASE}${endpoint}`;
+    const headers = {
+      'Content-Type': 'application/json',
+      ...(authToken ? { 'Authorization': `Bearer ${authToken}` } : {}),
+      ...options.headers,
+    };
+    const res = await fetch(url, { ...options, headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: `HTTP ${res.status}` }));
+      throw new Error(err.message || `请求失败 (${res.status})`);
+    }
+    return res.json();
+  }
+
+  function renderMemberSelect() {
+    const sel = document.getElementById('memberSelect');
+    sel.innerHTML = allMembers.map(m =>
+      `<option value="${m.id}" ${m.id == currentMemberId ? 'selected' : ''}>${m.name} (${m.role === 'admin' ? '本人' : '伴侣'})</option>`
+    ).join('');
+  }
+
+  function updateMemberDisplay(memberId) {
+    const member = allMembers.find(m => m.id == memberId);
+    document.getElementById('sidebarMemberName').textContent = member ? `当前成员：${member.name}` : '';
+  }
+
+  function onMemberChange() {
+    const newId = document.getElementById('memberSelect').value;
+    if (newId == currentMemberId) return;
+    currentMemberId = newId;
+    localStorage.setItem('family_member_id', currentMemberId);
+    updateMemberDisplay(currentMemberId);
+    navigateTo(currentPage);
+  }
+
+  function switchPage(page) {
+    currentPage = page;
+    navigateTo(page);
+    if (window.innerWidth <= 768) toggleSidebar();
+  }
+
+  function navigateTo(page) {
+    const src = `/${page}.html?member_id=${currentMemberId}`;
+    document.getElementById('appFrame').src = src;
+
+    // 更新侧边栏 active 状态
+    document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+    const activeLink = document.querySelector(`.sidebar-nav a[data-page="${page}"]`);
+    if (activeLink) activeLink.classList.add('active');
+  }
+
+  function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const isOpen = sidebar.classList.contains('open');
+    sidebar.classList.toggle('open', !isOpen);
+    overlay.classList.toggle('show', !isOpen);
+  }
+</script>
+</body>
+</html>
