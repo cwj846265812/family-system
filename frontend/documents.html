@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>文档 - 家庭管理系统</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .doc-category-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: var(--space-md);
+      margin-bottom: var(--space-lg);
+    }
+    .doc-category-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: var(--space-lg);
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 2px solid var(--border-light);
+      box-shadow: var(--shadow-card);
+    }
+    .doc-category-card:hover {
+      border-color: var(--accent);
+      box-shadow: var(--shadow-hover);
+    }
+    .doc-category-card.active {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+    .doc-category-icon {
+      font-size: 32px;
+      margin-bottom: var(--space-sm);
+    }
+    .doc-category-name {
+      font-weight: 600;
+      font-size: var(--font-size-sm);
+      margin-bottom: 2px;
+    }
+    .doc-category-count {
+      font-size: var(--font-size-xs);
+      color: var(--text-light);
+    }
+    .upload-zone {
+      border: 2px dashed var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-xl);
+      text-align: center;
+      background: var(--bg);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      margin-bottom: var(--space-lg);
+    }
+    .upload-zone:hover {
+      border-color: var(--accent);
+      background: var(--accent-light);
+    }
+    .upload-icon {
+      font-size: 36px;
+      color: var(--text-light);
+      margin-bottom: var(--space-sm);
+    }
+    .doc-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--space-sm) var(--space-lg);
+      border-bottom: 1px solid var(--border-light);
+      transition: background 0.15s ease;
+    }
+    .doc-list-item:hover {
+      background: var(--bg);
+    }
+    .doc-list-item:last-child {
+      border-bottom: none;
+    }
+
+    @media (max-width: 768px) {
+      .doc-category-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-sm);
+      }
+
+      .doc-category-card {
+        padding: var(--space-md);
+        min-height: 80px;
+      }
+
+      .doc-category-icon {
+        font-size: 24px;
+      }
+
+      .doc-category-name {
+        font-size: var(--font-size-xs);
+      }
+
+      .upload-zone {
+        padding: var(--space-lg) var(--space-md);
+        min-height: 100px;
+      }
+
+      .upload-icon {
+        font-size: 28px;
+      }
+
+      .doc-list-item {
+        padding: var(--space-sm) var(--space-md);
+        flex-wrap: wrap;
+        gap: var(--space-sm);
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="navbar-brand">文档模块</span>
+  <div class="navbar-actions">
+    <select class="navbar-switcher" id="memberSwitcher" onchange="switchMember(this.value)"></select>
+  </div>
+</nav>
+
+<div class="app-container" id="documentsApp">
+  <div class="loading"><div class="spinner"></div> 加载中...</div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/documents.js"></script>
+</body>
+</html>
