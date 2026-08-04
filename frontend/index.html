@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>家庭管理系统 — 登录</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-container {
+      max-width: 400px;
+      margin: 80px auto 0;
+      padding: var(--space-xl);
+      background: var(--surface);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+    }
+    .login-title {
+      text-align: center;
+      font-size: var(--font-size-xl);
+      font-weight: 800;
+      margin-bottom: var(--space-sm);
+    }
+    .login-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: var(--space-xl);
+      font-size: var(--font-size-sm);
+    }
+    .login-error {
+      text-align: center;
+      color: var(--danger);
+      font-size: var(--font-size-sm);
+      margin-bottom: var(--space-md);
+      display: none;
+    }
+    .login-error.show { display: block; }
+
+    @media (max-width: 768px) {
+      .login-container {
+        max-width: 100%;
+        margin: 40px var(--space-md) 0;
+        padding: var(--space-lg);
+      }
+
+      .login-title {
+        font-size: var(--font-size-lg);
+      }
+
+      .login-subtitle {
+        font-size: var(--font-size-xs);
+        margin-bottom: var(--space-lg);
+      }
+
+      #loginBtn {
+        min-height: 44px;
+        font-size: var(--font-size-md);
+      }
+
+      .form-input {
+        min-height: 44px;
+        font-size: 16px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .login-container {
+        margin: 20px var(--space-sm) 0;
+        padding: var(--space-md);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="login-container">
+    <div class="login-title">家庭管理系统</div>
+    <div class="login-subtitle">请输入账号密码登录</div>
+    <div class="login-error" id="loginError"></div>
+    <form id="loginForm" onsubmit="handleLogin(event)">
+      <div class="form-group">
+        <label class="form-label">用户名</label>
+        <input class="form-input" id="loginName" placeholder="请输入用户名" autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label class="form-label">密码</label>
+        <input class="form-input" type="password" id="loginPassword" placeholder="请输入密码" autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%; margin-top: var(--space-md);" id="loginBtn">登 录</button>
+    </form>
+    <p style="text-align:center; color: var(--text-tertiary); font-size: var(--font-size-xs); margin-top: var(--space-lg);">默认密码: 123456</p>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const btn = document.getElementById('loginBtn');
+      const errEl = document.getElementById('loginError');
+      const name = document.getElementById('loginName').value.trim();
+      const password = document.getElementById('loginPassword').value;
+
+      btn.disabled = true;
+      btn.textContent = '登录中...';
+      errEl.classList.remove('show');
+
+      try {
+        const data = await login(name, password);
+        window.location.href = `app.html?member_id=${data.member_id}`;
+      } catch (err) {
+        errEl.textContent = err.message;
+        errEl.classList.add('show');
+        btn.disabled = false;
+        btn.textContent = '登 录';
+      }
+    }
+  </script>
+</body>
+</html>
