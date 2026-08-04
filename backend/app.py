@@ -18,14 +18,18 @@ if BASE_DIR not in sys.path:
 app = Flask(__name__)
 CORS(app)
 
-# 数据库路径
-DATA_DIR = os.path.join(BASE_DIR, 'data')
-os.makedirs(DATA_DIR, exist_ok=True)
-DB_PATH = os.path.join(DATA_DIR, 'family.db')
+# 数据库配置：优先使用环境变量 DATABASE_URL（PostgreSQL），否则回退到 SQLite
+DATABASE_URL = os.environ.get('DATABASE_URL')
+if DATABASE_URL:
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+else:
+    DATA_DIR = os.path.join(BASE_DIR, 'data')
+    os.makedirs(DATA_DIR, exist_ok=True)
+    DB_PATH = os.path.join(DATA_DIR, 'family.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_PATH}'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY'] = 'family-system-secret-key-2026'
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'family-system-secret-key-2026')
 
 # 使用 models.py 中的唯一 db 实例
 from models import db
