@@ -1,0 +1,754 @@
+/* ============================================================
+   家庭管理系统 - 经期管理模块样式
+   ============================================================ */
+
+/* ---- 变量继承（继承 style.css 变量） ---- */
+:root {
+  --period-red: #E84A5F;
+  --period-red-light: #FFE0E5;
+  --period-pink: #F7A8B8;
+  --period-pink-light: #FFF0F3;
+  --ovulation-blue: #6CB4EE;
+  --ovulation-blue-light: #E3F2FD;
+  --fertile-green: #81C784;
+  --fertile-green-light: #E8F5E9;
+  --symptom-bg: #F5F0F3;
+  --symptom-active: #E8D8E0;
+}
+
+/* ---- 顶层容器 ---- */
+.period-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-lg);
+}
+
+/* ---- 通用卡片 ---- */
+.card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+  color: var(--text);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.card-body {
+  padding: var(--space-md) var(--space-lg);
+}
+
+/* ---- 按钮 ---- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  font-size: var(--font-size);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #FFF;
+  border-color: var(--primary);
+}
+.btn-primary:hover { background: var(--primary-dark); border-color: var(--primary-dark); }
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-secondary);
+  border-color: var(--border);
+}
+.btn-outline:hover { background: var(--border-light); }
+
+.btn-sm { padding: 6px 14px; font-size: var(--font-size-xs); }
+
+/* ---- 表单 ---- */
+.form-group { margin-bottom: var(--space-md); }
+.form-label { display: block; font-size: var(--font-size-sm); font-weight: 600; color: var(--text); margin-bottom: 6px; }
+.form-input {
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-size: var(--font-size);
+  color: var(--text);
+  background: var(--bg-card);
+  outline: none;
+  transition: border-color 0.15s;
+}
+.form-input:focus { border-color: var(--primary); }
+
+/* ---- 弹窗 ---- */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(61, 44, 44, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+}
+.modal {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 8px 32px rgba(61, 44, 44, 0.2);
+  width: 90%;
+  max-width: 420px;
+  overflow: hidden;
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-md) var(--space-lg);
+  border-bottom: 1px solid var(--border-light);
+  font-weight: 700;
+  font-size: var(--font-size-md);
+}
+.modal-body { padding: var(--space-lg); }
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  border-top: 1px solid var(--border-light);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text-light);
+  padding: 0 4px;
+}
+.modal-close:hover { color: var(--text); }
+
+/* ---- 加载动画 ---- */
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top-color: var(--primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ---- Toast ---- */
+.toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 24px;
+  border-radius: var(--radius);
+  font-size: var(--font-size-sm);
+  z-index: 300;
+  animation: toastIn 0.3s ease;
+  white-space: nowrap;
+}
+.toast.error { background: var(--warning); color: #FFF; }
+.toast.success { background: var(--secondary-dark); color: #FFF; }
+@keyframes toastIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+
+/* ---- 概览卡片 ---- */
+.period-overview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.period-stat {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  text-align: center;
+  box-shadow: var(--shadow);
+}
+
+.period-stat .stat-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+  line-height: 1.2;
+}
+
+.period-stat .stat-label {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.period-stat.highlight {
+  background: linear-gradient(135deg, var(--period-red-light), var(--period-pink-light));
+}
+
+.period-stat.highlight .stat-value {
+  color: var(--period-red);
+}
+
+/* ---- 日历区域 ---- */
+.period-calendar-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.period-calendar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-md) var(--space-lg);
+  background: linear-gradient(135deg, var(--period-pink-light), #FFF);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.period-calendar-header .month-title {
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.period-calendar-header .nav-btn {
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-card);
+  cursor: pointer;
+  font-size: 18px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.period-calendar-header .nav-btn:hover {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
+
+.period-calendar-header .nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.period-calendar {
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+}
+
+.period-calendar table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.period-calendar th {
+  font-size: var(--font-size-xs);
+  color: var(--text-light);
+  font-weight: 600;
+  padding: 8px 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.period-calendar td {
+  text-align: center;
+  padding: 4px;
+  height: 48px;
+  vertical-align: middle;
+}
+
+.period-calendar .cal-day {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+  border: 2px solid transparent;
+  font-weight: 500;
+}
+
+.period-calendar .cal-day:hover {
+  background: var(--border-light);
+}
+
+.period-calendar .cal-day.today {
+  border-color: var(--period-red);
+  font-weight: 700;
+}
+
+.period-calendar .cal-day.period-day {
+  background: var(--period-red);
+  color: #FFF;
+  font-weight: 700;
+  box-shadow: 0 2px 6px rgba(232, 74, 95, 0.35);
+}
+
+.period-calendar .cal-day.period-day.today {
+  box-shadow: 0 0 0 3px var(--period-red-light), 0 2px 6px rgba(232, 74, 95, 0.35);
+}
+
+.period-calendar .cal-day.predicted {
+  background: var(--period-red-light);
+  color: var(--period-red);
+  border: 1px dashed var(--period-red);
+  font-weight: 600;
+}
+
+.period-calendar .cal-day.ovulation {
+  background: var(--ovulation-blue-light);
+  color: var(--ovulation-blue);
+  border: 1px solid var(--ovulation-blue);
+}
+
+.period-calendar .cal-day.fertile {
+  background: var(--fertile-green-light);
+  color: var(--fertile-green);
+}
+
+.period-calendar .cal-day.other-month {
+  color: var(--text-light);
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ---- 图例 ---- */
+.period-legend {
+  display: flex;
+  gap: var(--space-lg);
+  padding: var(--space-md) var(--space-lg);
+  flex-wrap: wrap;
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.period-legend span {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.legend-dot.red { background: var(--period-red); }
+.legend-dot.pink { background: var(--period-red-light); border: 1px dashed var(--period-red); }
+.legend-dot.blue { background: var(--ovulation-blue-light); border: 1px solid var(--ovulation-blue); }
+.legend-dot.green { background: var(--fertile-green-light); border: 1px solid var(--fertile-green); }
+
+/* ---- 症状标签 ---- */
+.symptom-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: var(--space-sm);
+}
+
+.symptom-tag {
+  padding: 6px 14px;
+  border-radius: 20px;
+  background: var(--symptom-bg);
+  color: var(--text-secondary);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s;
+  user-select: none;
+}
+
+.symptom-tag:hover {
+  background: var(--symptom-active);
+}
+
+.symptom-tag.active {
+  background: var(--period-pink-light);
+  color: var(--period-red);
+  border-color: var(--period-pink);
+  font-weight: 600;
+}
+
+/* ---- 流量选择 ---- */
+.flow-selector {
+  display: flex;
+  gap: 8px;
+  margin-top: var(--space-sm);
+}
+
+.flow-btn {
+  flex: 1;
+  padding: 10px;
+  border: 2px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  text-align: center;
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  color: var(--text-secondary);
+}
+
+.flow-btn:hover {
+  border-color: var(--primary);
+}
+
+.flow-btn.active {
+  border-color: var(--period-red);
+  background: var(--period-red-light);
+  color: var(--period-red);
+  font-weight: 700;
+}
+
+/* ---- 经期详情弹窗 ---- */
+.period-detail-modal .modal {
+  max-width: 420px;
+}
+
+/* ---- 历史列表 ---- */
+.period-history {
+  margin-top: var(--space-lg);
+}
+
+.period-history .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.history-item {
+  display: flex;
+  align-items: center;
+  padding: var(--space-md) 0;
+  border-bottom: 1px solid var(--border-light);
+  gap: var(--space-md);
+}
+
+.history-item:last-child {
+  border-bottom: none;
+}
+
+.history-item .period-range {
+  flex: 1;
+  min-width: 0;
+}
+
+.history-item .period-dates {
+  font-weight: 600;
+  font-size: var(--font-size-sm);
+  color: var(--text);
+}
+
+.history-item .period-duration {
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.history-item .period-flow-badge {
+  font-size: var(--font-size-xs);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.history-item .period-flow-badge.light { background: #FFF3E0; color: #E65100; }
+.history-item .period-flow-badge.normal { background: #E8F5E9; color: #2E7D32; }
+.history-item .period-flow-badge.heavy { background: #FFEBEE; color: #C62828; }
+
+.history-item .period-symptoms {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.history-item .mini-symptom {
+  font-size: 10px;
+  padding: 2px 6px;
+  border-radius: 8px;
+  background: var(--symptom-bg);
+  color: var(--text-light);
+}
+
+.history-actions {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.history-actions button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.15s;
+}
+
+.history-actions button:hover {
+  background: var(--border-light);
+}
+
+.history-actions button.delete:hover {
+  background: var(--period-red-light);
+  color: var(--period-red);
+  border-color: var(--period-red);
+}
+
+/* ---- 空状态 ---- */
+.period-empty {
+  text-align: center;
+  padding: var(--space-xl) var(--space-lg);
+  color: var(--text-light);
+}
+
+.period-empty .empty-icon {
+  font-size: 48px;
+  margin-bottom: var(--space-md);
+}
+
+/* ============================================================
+   Responsive: Mobile (≤768px)
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .period-container {
+    padding: var(--space-md);
+  }
+
+  /* ---- 概览卡片 → 2x2 网格 ---- */
+  .period-overview {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .period-stat {
+    padding: var(--space-sm);
+  }
+
+  .period-stat .stat-value {
+    font-size: 22px;
+  }
+
+  .period-stat .stat-label {
+    font-size: 10px;
+  }
+
+  /* ---- 日历 ---- */
+  .period-calendar-section {
+    border-radius: var(--radius);
+  }
+
+  .period-calendar-header {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .period-calendar-header .month-title {
+    font-size: var(--font-size-md);
+  }
+
+  .period-calendar-header .nav-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+  }
+
+  .period-calendar {
+    padding: var(--space-sm);
+  }
+
+  .period-calendar th {
+    font-size: 10px;
+    padding: 6px 0;
+  }
+
+  .period-calendar td {
+    height: 42px;
+    padding: 2px;
+  }
+
+  .period-calendar .cal-day {
+    width: 36px;
+    height: 36px;
+    font-size: 12px;
+    min-width: 34px;
+    min-height: 34px;
+  }
+
+  /* ---- 图例 ---- */
+  .period-legend {
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    font-size: 10px;
+  }
+
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  /* ---- 经期弹窗 ---- */
+  .period-detail-modal .modal {
+    max-width: 100%;
+    width: 100%;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  .modal-overlay {
+    align-items: flex-end;
+  }
+
+  .modal {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  /* ---- 流量选择器 ---- */
+  .flow-selector {
+    gap: 6px;
+  }
+
+  .flow-btn {
+    padding: 10px 6px;
+    font-size: 12px;
+    min-height: 40px;
+  }
+
+  /* ---- 症状标签 ---- */
+  .symptom-tags {
+    gap: 6px;
+  }
+
+  .symptom-tag {
+    min-height: 36px;
+    display: inline-flex;
+    align-items: center;
+    padding: 6px 12px;
+    font-size: 11px;
+  }
+
+  /* ---- 历史记录 ---- */
+  .period-history {
+    margin-top: var(--space-md);
+  }
+
+  .history-item {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    padding: var(--space-sm) 0;
+  }
+
+  .history-item .period-range {
+    flex: 1 1 100%;
+  }
+
+  .history-actions {
+    margin-left: auto;
+  }
+
+  .history-actions button {
+    width: 36px;
+    height: 36px;
+    font-size: 16px;
+  }
+
+  /* ---- 表单 ---- */
+  .form-input {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .form-label {
+    font-size: var(--font-size);
+  }
+
+  /* ---- 按钮 ---- */
+  .btn {
+    min-height: 40px;
+    padding: 10px 18px;
+    font-size: var(--font-size-sm);
+  }
+
+  .btn-sm {
+    min-height: 36px;
+    padding: 6px 14px;
+    font-size: 11px;
+  }
+}
+
+/* ============================================================
+   Responsive: Small Phone (≤480px)
+   ============================================================ */
+
+@media (max-width: 480px) {
+  .period-container {
+    padding: var(--space-sm);
+  }
+
+  .period-overview {
+    gap: var(--space-xs);
+  }
+
+  .period-stat .stat-value {
+    font-size: 18px;
+  }
+
+  .period-calendar td {
+    height: 38px;
+    padding: 1px;
+  }
+
+  .period-calendar .cal-day {
+    width: 32px;
+    height: 32px;
+    min-width: 30px;
+    min-height: 30px;
+    font-size: 11px;
+  }
+
+  .period-calendar th {
+    font-size: 9px;
+    padding: 4px 0;
+  }
+
+  .flow-selector {
+    flex-direction: column;
+    gap: 4px;
+  }
+}
