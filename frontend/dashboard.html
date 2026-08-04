@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>仪表板 - 家庭管理系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- 顶部导航栏 -->
+<nav class="navbar">
+  <span class="navbar-brand">家庭管理</span>
+  <div class="navbar-actions">
+    <select class="navbar-switcher" id="memberSwitcher" onchange="switchMember(this.value)">
+    </select>
+  </div>
+</nav>
+
+<div class="app-container" id="dashboardApp">
+  <div class="loading"><div class="spinner"></div> 加载仪表板...</div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/dashboard.js"></script>
+</body>
+</html>
