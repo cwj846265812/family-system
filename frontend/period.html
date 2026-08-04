@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>经期管理 - 家庭管理系统</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/period.css">
+</head>
+<body>
+
+<div class="period-container">
+  <!-- 概览卡片 -->
+  <div class="period-overview" id="periodOverview">
+    <div class="period-stat">
+      <div class="stat-value" id="statLastPeriod">--</div>
+      <div class="stat-label">上次经期</div>
+    </div>
+    <div class="period-stat">
+      <div class="stat-value" id="statCycleLen">--</div>
+      <div class="stat-label">周期天数</div>
+    </div>
+    <div class="period-stat">
+      <div class="stat-value" id="statPeriodLen">--</div>
+      <div class="stat-label">经期天数</div>
+    </div>
+    <div class="period-stat highlight">
+      <div class="stat-value" id="statNextPeriod">--</div>
+      <div class="stat-label">距下次经期</div>
+    </div>
+  </div>
+
+  <!-- 日历 -->
+  <div class="period-calendar-section">
+    <div class="period-calendar-header">
+      <button class="nav-btn" id="prevMonthBtn" onclick="changeMonth(-1)">&#8249;</button>
+      <span class="month-title" id="monthTitle">2026年8月</span>
+      <button class="nav-btn" id="nextMonthBtn" onclick="changeMonth(1)">&#8250;</button>
+    </div>
+    <div class="period-calendar" id="periodCalendar"></div>
+    <div class="period-legend">
+      <span><span class="legend-dot red"></span>经期日</span>
+      <span><span class="legend-dot pink"></span>预测经期</span>
+      <span><span class="legend-dot blue"></span>排卵日</span>
+      <span><span class="legend-dot green"></span>易孕期</span>
+    </div>
+  </div>
+
+  <!-- 历史记录 -->
+  <div class="card period-history">
+    <div class="card-header">
+      <span>经期历史</span>
+      <button class="btn btn-primary btn-sm" onclick="openAddPeriodModal()">+ 添加记录</button>
+    </div>
+    <div class="card-body" id="periodHistory">
+      <div class="period-empty"><div class="spinner"></div> 加载中...</div>
+    </div>
+  </div>
+</div>
+
+<!-- 经期详情/编辑弹窗 -->
+<div class="modal-overlay" id="periodModal" style="display:none;">
+  <div class="modal period-detail-modal">
+    <div class="modal-header">
+      <span id="periodModalTitle">经期记录</span>
+      <button class="modal-close" onclick="closePeriodModal()">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">开始日期</label>
+        <input type="date" class="form-input" id="editPeriodStart">
+      </div>
+      <div class="form-group">
+        <label class="form-label">结束日期</label>
+        <input type="date" class="form-input" id="editPeriodEnd">
+      </div>
+      <div class="form-group">
+        <label class="form-label">经量</label>
+        <div class="flow-selector" id="editFlowSelector">
+          <div class="flow-btn" data-flow="light" onclick="selectFlow('light')">偏少</div>
+          <div class="flow-btn active" data-flow="normal" onclick="selectFlow('normal')">正常</div>
+          <div class="flow-btn" data-flow="heavy" onclick="selectFlow('heavy')">偏多</div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">症状</label>
+        <div class="symptom-tags" id="editSymptoms">
+          <span class="symptom-tag" data-tag="cramp" onclick="toggleSymptom(this)">腹痛</span>
+          <span class="symptom-tag" data-tag="backpain" onclick="toggleSymptom(this)">腰痛</span>
+          <span class="symptom-tag" data-tag="breast" onclick="toggleSymptom(this)">乳房胀痛</span>
+          <span class="symptom-tag" data-tag="headache" onclick="toggleSymptom(this)">头痛</span>
+          <span class="symptom-tag" data-tag="fatigue" onclick="toggleSymptom(this)">疲劳</span>
+          <span class="symptom-tag" data-tag="mood" onclick="toggleSymptom(this)">情绪波动</span>
+          <span class="symptom-tag" data-tag="nausea" onclick="toggleSymptom(this)">恶心</span>
+          <span class="symptom-tag" data-tag="insomnia" onclick="toggleSymptom(this)">失眠</span>
+          <span class="symptom-tag" data-tag="bloating" onclick="toggleSymptom(this)">腹胀</span>
+          <span class="symptom-tag" data-tag="acne" onclick="toggleSymptom(this)">长痘</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="closePeriodModal()">取消</button>
+      <button class="btn btn-primary btn-sm" id="btnSavePeriod" onclick="savePeriodRecord()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/period.js"></script>
+</body>
+</html>
