@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>物品 - 家庭管理系统</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <span class="navbar-brand">物品模块</span>
+  <div class="navbar-actions">
+    <select class="navbar-switcher" id="memberSwitcher" onchange="switchMember(this.value)"></select>
+  </div>
+</nav>
+
+<div class="app-container" id="itemsApp">
+  <div class="loading"><div class="spinner"></div> 加载中...</div>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/items.js"></script>
+</body>
+</html>
